@@ -1,6 +1,7 @@
 # NoteVision AI
 
-![AWS Lambda](https://img.shields.io/badge/Deployed-AWS%20Lambda-orange?logo=awslambda)
+![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)
+![AWS Lambda](https://img.shields.io/badge/Backend-AWS%20Lambda-orange?logo=awslambda)
 ![Docker](https://img.shields.io/badge/Containerized-Docker-blue?logo=docker)
 ![Next.js](https://img.shields.io/badge/Frontend-Next.js-black?logo=next.js)
 ![FastAPI](https://img.shields.io/badge/Backend-FastAPI-green?logo=fastapi)
@@ -9,6 +10,8 @@
 ![Qwen2.5--VL](https://img.shields.io/badge/Vision-Qwen2.5--VL-success)
 
 NoteVision AI is an AI-powered OCR SaaS application that converts handwritten notes, scanned pages, images, and PDFs into clean digital text using Vision Language Models.
+
+The project started with a Vercel-hosted Next.js frontend and then evolved into a Dockerized full-stack deployment on AWS Lambda using Lambda Function URLs and response streaming.
 
 ---
 
@@ -22,6 +25,7 @@ NoteVision AI is an AI-powered OCR SaaS application that converts handwritten no
 - Streaming text output
 - FastAPI backend
 - Next.js frontend
+- Vercel frontend deployment
 - Dockerized full-stack deployment
 - AWS Lambda container deployment
 - Lambda Function URL with response streaming
@@ -39,6 +43,7 @@ NoteVision AI is an AI-powered OCR SaaS application that converts handwritten no
 - Clerk Authentication
 - Clerk Billing
 - React Markdown
+- Vercel
 
 ### Backend
 
@@ -51,6 +56,7 @@ NoteVision AI is an AI-powered OCR SaaS application that converts handwritten no
 
 ### Deployment
 
+- Vercel
 - Docker
 - AWS ECR
 - AWS Lambda Container Images
@@ -59,8 +65,11 @@ NoteVision AI is an AI-powered OCR SaaS application that converts handwritten no
 
 ---
 
+## Demo
 
+![NoteVision Home](docs/homepage.png)
 
+---
 
 ## Architecture
 
@@ -77,13 +86,66 @@ OpenRouter Vision Model
   ↓
 Streaming OCR Output
 ```
+
 ## Application Architecture
 
 ![Architecture](docs/architecture.png)
+
 ---
 
+## Deployment Evolution
 
+### Phase 1: Vercel Deployment
 
+```txt
+User
+  ↓
+Vercel
+  ↓
+Next.js Frontend
+  ↓
+FastAPI API Route / Backend
+  ↓
+OpenRouter Vision Model
+```
+
+The first working version used Vercel for the frontend and API routing. This helped validate the MVP quickly with authentication, subscription gating, OCR upload, and streaming text output.
+
+### Phase 2: Dockerized Full-Stack App
+
+```txt
+User
+  ↓
+Docker Container
+  ↓
+FastAPI
+  ├── Serves exported Next.js static frontend
+  └── Handles /api OCR requests
+  ↓
+OpenRouter Qwen Vision Model
+```
+
+The app was later converted into a single Docker image where FastAPI serves both the static Next.js frontend and the OCR backend.
+
+### Phase 3: AWS Lambda Container Deployment
+
+```txt
+User
+  ↓
+Lambda Function URL
+  ↓
+AWS Lambda Container
+  ↓
+FastAPI Backend
+  ↓
+OpenRouter Vision Model
+  ↓
+Streaming OCR Output
+```
+
+The current deployment runs as a containerized AWS Lambda function using Lambda Web Adapter and Function URL response streaming.
+
+---
 
 ## Local Development
 
@@ -119,6 +181,32 @@ curl http://localhost:8000/health
 
 ---
 
+## Vercel Deployment
+
+The first frontend deployment was done using Vercel.
+
+```txt
+Frontend:
+Next.js + TypeScript + Tailwind CSS
+
+Authentication:
+Clerk
+
+AI Backend:
+FastAPI + OpenRouter
+```
+
+The Vercel version was useful for validating:
+
+- Landing page
+- Clerk login
+- Subscription gating
+- Upload UI
+- OCR streaming output
+- Initial SaaS user flow
+
+---
+
 ## AWS Deployment
 
 ### Build Docker Image
@@ -129,12 +217,6 @@ docker build \
   --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" \
   -t notevision-ai .
 ```
-
-
-## Demo
-
-![NoteVision Home](docs/homepage.png)
-
 
 ### Login to ECR
 
@@ -184,6 +266,7 @@ RESPONSE_STREAM
 ### Completed
 
 - Next.js Frontend
+- Vercel frontend deployment
 - Clerk Authentication
 - Subscription Gating
 - FastAPI Backend
